@@ -1,1 +1,22 @@
-encoding: utf-8
+title: Dev blog
+description: Long Form Jekyll theme built with SASS / COMPASS / SUSY
+
+url: http://manufigueroa.github.io
+baseurl: ""
+paginate_path: "blog/page:num/"
+permalink: blog/:title/
+
+markdown: kramdown
+highlighter: rouge
+gems: [jekyll-paginate]
+paginate: 5
+
+navigation:
+ - title: Home
+   url: /index.html
+ - title: About
+   url: /about
+
+social:
+   github: manufigueroa
+   email: manuel.figueroa@alumnos.usm.cl
