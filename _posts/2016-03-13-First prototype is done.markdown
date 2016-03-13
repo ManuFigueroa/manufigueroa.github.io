@@ -19,4 +19,6 @@ My main problem was with time-loops. In the game I originally assigned 4 time lo
 
 The issue with this was that, after the 3rd loop started, the second one would just stop. This meant that the enemies would stop coming from the top of the screen, it also had another side effect: enemies would appear in pairs from the newest loop. So it would pop 2 enemies at a time from the right until the 4th loop started, then it would pop one from the right but 2 from the bottom.
 
+In the end what I did was keeping all the enemy spawns in just one time-loop, where the frequency of the spawn changed with a "difficulty" variable. Nothing a bunch of if and elses couldn't fix.
+
 All in all the overall experience was good, I'm brainstorming for ideas for the rest of the prototypes for now, and I'll come back with a new post once the next prototype is done.
