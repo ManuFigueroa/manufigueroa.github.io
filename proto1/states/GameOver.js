@@ -1,9 +1,12 @@
 ﻿var gameover = {
     create: function () {
+        var finalscore = game.add.text(400,100,'You dodged '+ score + ' squares!',{ font: '25px Arial', fill: '#ffffff' })
         var namelabel = game.add.text(400, 200, 'Game Over', { font: '50px Arial', fill: '#ffffff', boundsAlignH: 'center' });
         var pressStart = game.add.text(400, 300, 'Press R to play again', { font: '25px Arial', fill: '#ffffff' });
         var backToMenu = game.add.text(400, 350, 'Press X to go back to the main menu', { font: '25px Arial', fill: '#ffffff' });
 
+        finalscore.anchor.setTo(0.5, 0.5);
+        finalscore.align = "center";
         namelabel.anchor.setTo(0.5, 0.5);
         namelabel.align = "center";
         pressStart.anchor.setTo(0.5, 0.5);
