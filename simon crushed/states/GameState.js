@@ -44,7 +44,7 @@ function create() {
     en_pantalla = 250;
     speed = 600;
 
-    tiempo_ataque = (1.35)*(velocidad_maloH+en_pantalla);
+    tiempo_ataque = (1.4)*(velocidad_maloH+en_pantalla);
 
 
     var matar_inters = setInterval('');
@@ -84,7 +84,7 @@ function create() {
 
     cursors = game.input.keyboard.createCursorKeys();
 
-    console.log('ver 0.78');
+    console.log('ver 0.79');
     setTimeout(function(){
         vivo = 1;
         comenzar();
@@ -259,25 +259,25 @@ function ataque(donde){
 
             malo.reset(-780, 0);
             tween.to({x: -dist_todosH}, velocidad_todos, 'Linear', true, 0);            
-            setTimeout(function (){malo.body.velocity.x = -velocidad_salida;}, (1.2*(en_pantalla+velocidad_todos)));
+            setTimeout(function (){malo.body.velocity.x = -velocidad_salida;}, (1.4*(en_pantalla+velocidad_todos)));
 
             var maloN = malos.getFirstDead();
             var tweenN = game.add.tween(maloN);
             maloN.reset(0, -580);
             tweenN.to({y: -dist_todosV}, velocidad_todos, 'Linear', true);
-            setTimeout(function (){maloN.body.velocity.y = -velocidad_salida;}, (1.2*(en_pantalla+velocidad_todos)));
+            setTimeout(function (){maloN.body.velocity.y = -velocidad_salida;}, (1.4*(en_pantalla+velocidad_todos)));
 
             var maloE = malos.getFirstDead();
             var tweenE = game.add.tween(maloE);
             maloE.reset(780, 0);
             tweenE.to({x: dist_todosH}, velocidad_todos, 'Linear', true, 0);
-            setTimeout(function (){maloE.body.velocity.x = velocidad_salida;}, (1.2*(en_pantalla+velocidad_todos)));
+            setTimeout(function (){maloE.body.velocity.x = velocidad_salida;}, (1.4*(en_pantalla+velocidad_todos)));
 
             var maloSur = malos.getFirstDead();
             var tweenS = game.add.tween(maloSur);
             maloSur.reset(0, 580);
             tweenS.to({y: dist_todosV}, velocidad_todos, 'Linear', true, 0);
-            setTimeout(function (){maloSur.body.velocity.y = velocidad_salida;}, (1.2*(en_pantalla+velocidad_todos)));
+            setTimeout(function (){maloSur.body.velocity.y = velocidad_salida;}, (1.4*(en_pantalla+velocidad_todos)));
 
             maloN.outOfBoundsKill = true;
             maloE.outOfBoundsKill = true;
