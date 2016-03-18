@@ -11,20 +11,21 @@ var result = '';
 var result2 = '';
 
 var cursors;
-var speed = 600;
+var speed = 0;
 var lista = [];
 var largo = 0;
 var vivo = 1;
 
 var score = 0;
 var i = 0;
-var velocidad_malo = 650;
-var velocidad_salida = 700;
-var en_pantalla = 1000;
+var velocidad_malo = 0;
+var velocidad_salida = 0;
+var velocidad_todos = 400;
+var en_pantalla = 0;
 var tiempo_aviso = 700;
-var tiempo_ataque = (1.5)*(velocidad_malo+en_pantalla);
+var tiempo_ataque = 0;
 
-var dist = 85;
+var dist = 90;
 var dist_todosH = 500;
 var dist_todosV = 400;
 
@@ -35,13 +36,22 @@ function create() {
     score = 0;
     lista = [];
     largo = 0;
-    vivo = 1;
     puedo_atacar = 1;
 
     velocidad_malo = 800;
+    velocidad_maloH = 900;
     velocidad_salida = 900;
-    en_pantalla = 1200;
-    speed = 650;
+    en_pantalla = 250;
+    speed = 600;
+
+    tiempo_ataque = (1.35)*(velocidad_maloH+en_pantalla);
+
+
+    var matar_inters = setInterval('');
+
+    for(var i = 0; i<matar_inters;i++){
+        clearInterval(i);
+    }
 
     cubo = game.add.sprite(500, 200, 'cubito');
     cubo.anchor.set(0.5);
@@ -58,9 +68,9 @@ function create() {
     circulos.enableBody = true;
 
 
-    malos.createMultiple(25, 'malo');
-    avisos.createMultiple(10,'aviso');
-    circulos.createMultiple(5,'circulo');
+    malos.createMultiple(35, 'malo');
+    avisos.createMultiple(20,'aviso');
+    circulos.createMultiple(10,'circulo');
         
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.physics.arcade.enable(cubo);
@@ -74,8 +84,12 @@ function create() {
 
     cursors = game.input.keyboard.createCursorKeys();
 
-    console.log('ver 0.55');
-    comenzar();
+    console.log('ver 0.78');
+    setTimeout(function(){
+        vivo = 1;
+        comenzar();
+    },500);
+    
     
 }
 
@@ -84,25 +98,31 @@ function comenzar(){
     var i = 0;
 
     if (puedo_atacar == 1){
-        lado = Math.floor(Math.random()*5) + 1;
+        lado = Math.floor(Math.random()*8) + 1;
+        if (lado >= 5){
+            lado = 5;
+        }
 
-        if( lado == anterior){
+        if( lado == anterior ){
             if (lado == 5){
-                lado = 1;
+                lado = Math.floor(Math.random()*4) + 1;
             }
             else{
                 lado = lado+1;
             }            
 
         }
+
         anterior = lado;
         lista.push(lado);
         largo ++;
 
-        intervalo = setInterval(function(){
-            i++;
-            avisar(i);
-        }, tiempo_aviso);
+        if(vivo == 1){
+            intervalo = setInterval(function(){
+                i++;
+                avisar(i);
+            }, tiempo_aviso);
+        }
 
     }
  
@@ -170,11 +190,15 @@ function avisar(i){
 
 function comenzar_ataque(){
     var i = 0;
-    
-    int_ataque = setInterval(function(){
-            i++;
-            ataque(i);
-        }, tiempo_ataque);
+
+    //console.log(lista);
+    if(vivo == 1){
+        int_ataque = setInterval(function(){
+                i++;
+                //console.log(lista[i-1]);
+                ataque(i);
+            }, tiempo_ataque);
+    }
 
 
 }
@@ -205,8 +229,8 @@ function ataque(donde){
         case 1:
             
             malo.reset(-780, 0);
-            tween.to({x: -dist}, velocidad_malo, 'Linear', true, 0);            
-            setTimeout(function (){malo.body.velocity.x = -velocidad_salida;}, en_pantalla+velocidad_malo);
+            tween.to({x: -dist}, velocidad_maloH, 'Linear', true, 0);            
+            setTimeout(function (){malo.body.velocity.x = -velocidad_salida;}, en_pantalla+velocidad_maloH);
             break;
 
         case 2:
@@ -219,8 +243,8 @@ function ataque(donde){
         case 3:
 
             malo.reset(780, 0);
-            tween.to({x: dist}, velocidad_malo, 'Linear', true, 0);
-            setTimeout(function (){malo.body.velocity.x = velocidad_salida;}, en_pantalla+velocidad_malo);
+            tween.to({x: dist}, velocidad_maloH, 'Linear', true, 0);
+            setTimeout(function (){malo.body.velocity.x = velocidad_salida;}, en_pantalla+velocidad_maloH);
 
             break;
 
@@ -232,30 +256,33 @@ function ataque(donde){
 
             break;
         default:
+
+            malo.reset(-780, 0);
+            tween.to({x: -dist_todosH}, velocidad_todos, 'Linear', true, 0);            
+            setTimeout(function (){malo.body.velocity.x = -velocidad_salida;}, (1.2*(en_pantalla+velocidad_todos)));
+
             var maloN = malos.getFirstDead();
             var tweenN = game.add.tween(maloN);
+            maloN.reset(0, -580);
+            tweenN.to({y: -dist_todosV}, velocidad_todos, 'Linear', true);
+            setTimeout(function (){maloN.body.velocity.y = -velocidad_salida;}, (1.2*(en_pantalla+velocidad_todos)));
 
             var maloE = malos.getFirstDead();
             var tweenE = game.add.tween(maloE);
+            maloE.reset(780, 0);
+            tweenE.to({x: dist_todosH}, velocidad_todos, 'Linear', true, 0);
+            setTimeout(function (){maloE.body.velocity.x = velocidad_salida;}, (1.2*(en_pantalla+velocidad_todos)));
 
             var maloSur = malos.getFirstDead();
             var tweenS = game.add.tween(maloSur);
-
-            malo.reset(-780, 0);
-            tweenN.to({x: -dist_todosH}, velocidad_malo, 'Linear', true, 0);            
-            setTimeout(function (){malo.body.velocity.x = -velocidad_salida;}, en_pantalla+velocidad_malo);
-
-            maloN.reset(0, -580);
-            tweenE.to({y: -dist_todosV}, velocidad_malo, 'Linear', true);
-            setTimeout(function (){maloN.body.velocity.y = -velocidad_salida;}, en_pantalla+velocidad_malo);
-
-            maloE.reset(780, 0);
-            tween.to({x: dist_todosH}, velocidad_malo, 'Linear', true, 0);
-            setTimeout(function (){maloE.body.velocity.x = velocidad_salida;}, en_pantalla+velocidad_malo);
-
             maloSur.reset(0, 580);
-            tweenS.to({y: dist_todosV}, velocidad_malo, 'Linear', true, 0);
-            setTimeout(function (){maloSur.body.velocity.y = velocidad_salida;}, en_pantalla+velocidad_malo);
+            tweenS.to({y: dist_todosV}, velocidad_todos, 'Linear', true, 0);
+            setTimeout(function (){maloSur.body.velocity.y = velocidad_salida;}, (1.2*(en_pantalla+velocidad_todos)));
+
+            maloN.outOfBoundsKill = true;
+            maloE.outOfBoundsKill = true;
+            maloSur.outOfBoundsKill = true;
+         
 
 
             break;
@@ -293,7 +320,7 @@ function update() {
     }
 
     //flag = 'W: ' + W + ' N: ' + N + ' E: '+ E + ' S: '+S + ' Score: ' + score ;
-    result = lista;
+    //result = lista;
     scoreLabel.text = score;
 }
 
@@ -305,10 +332,19 @@ function scoreUP() {
 
 function die(cubo, malo) {   
     game.stage.backgroundColor= 'rgba(255,151,151,50)'; 
-    game.paused = true;
-    clearInterval(int_ataque);
+    game.paused = true;   
     vivo = 0;
-    setTimeout(function(){
+
+    var matar_inters = setInterval('');
+
+    for(var i = 0; i<matar_inters;i++){
+        clearInterval(i);
+    }
+    //clearInterval(intervalo);
+    //clearInterval(int_ataque);
+
+    puedo_atacar = 0;
+    setTimeout(function(){  
         game.paused = false;
         game.stage.backgroundColor = 'rgb(0,0,0)';
         game.state.start('gameover');         
