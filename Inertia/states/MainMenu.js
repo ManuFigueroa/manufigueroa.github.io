@@ -16,7 +16,7 @@ function create() {
 
     /*===========================*/
     /*TESTING*/
-    localStorage.clear();
+    //localStorage.clear();
 
     /*FIN TESTING*/
     /*===========================*/
