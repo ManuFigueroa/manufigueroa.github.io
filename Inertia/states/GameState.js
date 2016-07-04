@@ -460,6 +460,7 @@ function pierdo_hp(body1,body2){
             game.stage.backgroundColor= 'rgba(255,151,151,50)';
             cubo.tint = 0xFFFFFF; 
             game.paused = true;
+            shield_in_use = 1;
             
             if(localStorage.getItem("max_wave") == null){
             	cur_max_wave = 1;
@@ -518,7 +519,7 @@ function collect_token(body1, body2){
 	else{
 		tok = parseInt(localStorage.getItem("tokens"));
 		console.log("tenia " + tok);
-		tok+=1;
+		tok+=10;
 	}
 
 	localStorage.setItem("tokens", tok.toString());

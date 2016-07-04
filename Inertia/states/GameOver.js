@@ -1,7 +1,15 @@
 ﻿var gameover = {
     create: function () {
+        var hs = parseInt(localStorage.getItem("HighScore"));
 
-        var finalscore = game.add.text(400,100,'Your score is '+ final_score,{ font: '25px Courier', fill: '#ffffff' })
+        if(final_score > hs){
+            localStorage.setItem("HighScore", final_score.toString());
+            var finalscore = game.add.text(400,100,'Highscore!! you made it to '+ final_score,{ font: '25px Courier', fill: '#ffffff' });
+        }
+        else{
+            var finalscore = game.add.text(400,100,'Your score is '+ final_score,{ font: '25px Courier', fill: '#ffffff' });
+        }
+        
         var namelabel = game.add.text(400, 200, 'Game Over', { font: '50px Courier', fill: '#ffffff', boundsAlignH: 'center' });
         var pressStart = game.add.text(400, 300, 'Press r to play again', { font: '25px Courier', fill: '#ffffff' });
         var backToMenu = game.add.text(400, 350, 'Press s to go back to the main menu', { font: '25px Courier', fill: '#ffffff' });
