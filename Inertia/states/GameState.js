@@ -17,6 +17,7 @@ var xkey;
 var tkey;
 var comprando = 0;
 var hay_token = 1;
+var perdi = 0;
 
 var speed = 0;
 var hp = 3;
@@ -83,6 +84,7 @@ function create() {
     vulnerable = 1;
     vivos = 0;
     ronda_lista = 0;
+    perdi = 0;
 
     console.log("ronda: "+ronda+" Prox: "+prox_dificultad+" frec: "+frecuencia_enemigos);
 
@@ -175,7 +177,7 @@ function create() {
     tkey = game.input.keyboard.addKey(Phaser.Keyboard.T);
 
     xkey.onDown.add(sacar_pausa,this);
-    //tkey.onDown.add(toggle_music,this);
+    tkey.onDown.add(toggle_music,this);
     spacebar.onDown.add(create_shield, this);
 
     game.input.onDown.add(shop, self);
@@ -196,7 +198,9 @@ function create() {
 
     game.add.tween(wave_name).to( { alpha: 0 }, 2000, "Linear", true);
     setTimeout(function (){
-        wave_name.destroy();
+        if(perdi == 0){
+            wave_name.destroy();
+        }
     },2000);
 }
 
@@ -461,6 +465,7 @@ function pierdo_hp(body1,body2){
             cubo.tint = 0xFFFFFF; 
             game.paused = true;
             shield_in_use = 1;
+            perdi = 1;
             
             if(localStorage.getItem("max_wave") == null){
             	cur_max_wave = 1;
@@ -481,7 +486,7 @@ function pierdo_hp(body1,body2){
             game.stage.backgroundColor = 'rgb(0,0,0)';
             game.state.start('gameover'); 
             timer_prueba.remove();        
-            },3000); 
+            },1500); 
         }
 
     }
@@ -494,7 +499,7 @@ function update_hp(current_hp){
 }
 
 function collect_token(body1, body2){
-
+    var aumentar_tok = Math.floor((ronda/10)+ 1);
 	if(!body2.hasCollided)
     {   
     	hay_token = 0;
@@ -503,11 +508,13 @@ function collect_token(body1, body2){
     	body2.hasCollided = true;
 		body2.sprite.kill();
 
-        var txt_collected = game.add.text(txt_x, txt_y, '+1', { font: '25px Courier', fill: '#ffffff' });
+        var txt_collected = game.add.text(txt_x, txt_y, '+'+aumentar_tok, { font: '25px Courier', fill: '#ffffff' });
         game.add.tween(txt_collected).to({y: txt_y-50, alpha: 0}, 2000, 'Linear', true, 0);
 
         setTimeout(function(){
-            txt_collected.destroy();
+            if(perdi == 0){
+                txt_collected.destroy();
+            }
         }, 2100);
 
 	}
@@ -519,7 +526,7 @@ function collect_token(body1, body2){
 	else{
 		tok = parseInt(localStorage.getItem("tokens"));
 		console.log("tenia " + tok);
-		tok+=10;
+		tok+=aumentar_tok;
 	}
 
 	localStorage.setItem("tokens", tok.toString());
@@ -638,12 +645,14 @@ function spike_vs_malo(body1, body2){
             body1.sprite.alpha = 0.2;
             body1.clearShapes();
             setTimeout(function(){
-                body1.sprite.alpha = 1;
-                body1.hp = spikes_hp;
+                if(perdi == 0){
+                    body1.sprite.alpha = 1;
+                    body1.hp = spikes_hp;
 
-                body1.setCircle(13);
-                body1.setCollisionGroup(SpikeColGroup);
-                body1.collides(EnemyColGroup, spike_vs_malo, this);
+                    body1.setCircle(13);
+                    body1.setCollisionGroup(SpikeColGroup);
+                    body1.collides(EnemyColGroup, spike_vs_malo, this);
+                }
             }
             ,spike_timeout);
         }
@@ -902,18 +911,31 @@ function comenzar_enemigos(cuantos){
             break;
     }
 
+    var otro_lado = game.rnd.integerInRange(45,755);
     switch(lado){
         case 1:
-            var malo = malos.create(45,game.rnd.integerInRange(45,755), shape);
+            if((cubo.position.y - otro_lado) < 100){
+                otro_lado = 800-otro_lado;
+            }
+            var malo = malos.create(45, otro_lado, shape);
             break;
         case 2:
-            var malo = malos.create(game.rnd.integerInRange(45,755),45, shape);
+            if((cubo.position.x - otro_lado) < 100){
+                otro_lado = 800-otro_lado;
+            }
+            var malo = malos.create(otro_lado,45, shape);
             break;
         case 3:
-            var malo = malos.create(755,game.rnd.integerInRange(45,755), shape);
+            if((cubo.position.y - otro_lado) < 100){
+                otro_lado = 800-otro_lado;
+            }
+            var malo = malos.create(755,otro_lado, shape);
             break;
         default:
-            var malo = malos.create(game.rnd.integerInRange(45,755),755, shape);
+            if((cubo.position.x - otro_lado) < 100){
+                otro_lado = 800-otro_lado;
+            }
+            var malo = malos.create(otro_lado,755, shape);
             break;
 
     }
@@ -992,18 +1014,21 @@ function create_shield(){
         game.add.tween(shield).to ({alpha: 0.15}, shield_duration, 'Linear', true, 0); 
  
 
-        setTimeout(function(){            
-            shield.destroy();  
-            Cooldown_bar = game.add.sprite(cubo.position.x, cubo.position.y - 25, 'CD_bar');
-            Cooldown_bar.anchor.setTo(0.5);
-            game.add.tween(Cooldown_bar.scale).to ({x: 0.01}, shield_cooldown, 'Linear', true, 0);      
+        setTimeout(function(){  
+            if(perdi == 0){          
+                shield.destroy();  
+                Cooldown_bar = game.add.sprite(cubo.position.x, cubo.position.y - 25, 'CD_bar');
+                Cooldown_bar.anchor.setTo(0.5);
+                game.add.tween(Cooldown_bar.scale).to ({x: 0.01}, shield_cooldown, 'Linear', true, 0);      
 
-            setTimeout(function() {
-                shield_in_use = 0;                  
-                Cooldown_bar.destroy(); 
-                Cooldown_bar = null;              
-            }, shield_cooldown); 
-
+                setTimeout(function() {
+                    if(perdi == 0){
+                        shield_in_use = 0;                  
+                        Cooldown_bar.destroy(); 
+                        Cooldown_bar = null;     
+                    }         
+                }, shield_cooldown); 
+            }
         },shield_duration);
     }
 }
@@ -1109,7 +1134,9 @@ function sacar_pausa(){
 
         game.add.tween(wave_name).to( { alpha: 0 }, 2000, "Linear", true);
         setTimeout(function (){
-            wave_name.destroy();
+            if(perdi == 0){
+                wave_name.destroy();
+            }
         },2000);
     }
 }
@@ -1264,11 +1291,11 @@ function shop(event){
 }
 
 function toggle_music(){
-    if(music.mute == true){
-        music.mute = false;
+    if(BasicGame.music.mute == true){
+        BasicGame.music.mute = false;
     }
     else{
-        music.mute = true;
+        BasicGame.music.mute = true;
     }
 }
 

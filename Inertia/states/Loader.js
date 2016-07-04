@@ -23,11 +23,14 @@ function preload() {
     game.load.image('fondo_pausa', 'assets/menupausa.png');
     game.load.image('CD_bar', 'assets/CDbar.png');
     game.load.image('token', 'assets/token.png');
+    game.load.image('instrucciones', 'assets/instructions.png');
+    game.load.image('titulo', 'assets/titulo.png');
 
     game.load.spritesheet('mute', 'assets/speaker.png', 32, 32, 2);
+    game.load.spritesheet('keys', 'assets/keys_sheet.png', 528, 320, 4);
     game.load.image('menos', 'assets/minus.png');
     game.load.image('mas', 'assets/plus.png');
-    //game.load.audio('bgm', ['assets/sounds/keepflying.mp3','assets/sounds/keepflying.ogg']);
+    game.load.audio('bgm1', 'assets/sounds/inercia_bgm.mp3');
 
     game.load.physics('physicsData', 'assets/polygons.json');    
 }

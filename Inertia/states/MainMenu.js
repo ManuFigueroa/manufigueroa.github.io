@@ -11,6 +11,7 @@ var wave_label;
 var comprando_tokens = 0;
 var current_tokens = 0;
 
+
 function create() {
     console.log('Menu ver 3.42');    
 
@@ -22,23 +23,26 @@ function create() {
     /*===========================*/
 
     loading_label.destroy();
-    var namelabel = game.add.text(400, 200, 'INERTIA', { font: '50px Courier', fill: '#ffffff', boundsAlignH: 'center' });
-    var pressStart = game.add.text(400, 500, 'Press s to start', { font: '25px Courier', fill: '#ffffff' });
-    var instructions = game.add.text(400,650, 'Use your arrow keys to move',{ font: '25px Courier', fill: '#ffffff' } )    
-    var instructions3 = game.add.text(400,690, 'press d to use your shield',{ font: '25px Courier', fill: '#ffffff' } )
-    //var music_text = game.add.text(650, 38, 'press t to mute/unmute',{ font: '12px Courier', fill: '#ffffff' } );
+    //var namelabel = game.add.text(400, 200, 'INERTIA', { font: '50px Courier', fill: '#ffffff', boundsAlignH: 'center' });
+    titulo = game.add.sprite(400,300, 'titulo');
+    titulo.anchor.setTo(0.5, 0.5);
+
+    cubo_titulo = game.add.sprite(590, 240, 'cubito');
+    cubo_titulo.anchor.set(0.5);
+    still_titulo = cubo_titulo.animations.add('still');
+    cubo_titulo.animations.play('still', 8, true);
+
+    var pressStart = game.add.text(400, 600, 'Press s to start', { font: '25px Courier', fill: '#ffffff' });
+    var music_text = game.add.text(600, 38, 'press t to mute/unmute',{ font: '12px Courier', fill: '#ffffff' } );
     
-    namelabel.anchor.setTo(0.5, 0.5);
-    namelabel.align = "center";
 
     pressStart.anchor.setTo(0.5, 0.5);
     pressStart.align = "center";
 
-    instructions.anchor.setTo(0.5, 0.5);
-    instructions.align = "center";
-    instructions3.anchor.setTo(0.5, 0.5);
-    instructions3.align = "center";
-
+    var boton_instrucciones = game.add.sprite(400, 650, 'instrucciones');
+    boton_instrucciones.anchor.setTo(0.5,0.5);
+    boton_instrucciones.inputEnabled = true;
+    boton_instrucciones.events.onInputDown.add(mostrar_instrucciones,this);
 
     if(localStorage.getItem("max_wave") == null)
     {
@@ -51,18 +55,18 @@ function create() {
 
 
     if(max_wave>1){
-        var selectlevel = game.add.text(550, 350, 'Select starting wave', { font: '25px Courier', fill: '#ffffff'});
+        var selectlevel = game.add.text(550, 450, 'Select starting wave', { font: '25px Courier', fill: '#ffffff'});
         selectlevel.anchor.setTo(0.5, 0.5);
         selectlevel.align = "center";
 
         start_wave = max_wave;
-        wave_label = game.add.text(550, 400, max_wave, { font: '25px Courier', fill: '#ffffff'})
+        wave_label = game.add.text(550, 500, max_wave, { font: '25px Courier', fill: '#ffffff'})
         wave_label.anchor.setTo(0.5, 0.5);
         wave_label.align = "center";
 
-        var mas_lvl = game.add.sprite(580, 390, 'mas');
+        var mas_lvl = game.add.sprite(580, 490, 'mas');
         mas_lvl.scale.setTo(0.7);
-        var menos_lvl = game.add.sprite(490, 390, 'menos');
+        var menos_lvl = game.add.sprite(490, 490, 'menos');
         menos_lvl.scale.setTo(0.7);
 
         mas_lvl.inputEnabled = true;
@@ -70,17 +74,17 @@ function create() {
         menos_lvl.inputEnabled = true;
         menos_lvl.events.onInputDown.add(bajar_wave, this);
 
-        var token_shop = game.add.sprite(235, 400, 'token');
+        var token_shop = game.add.sprite(235, 500, 'token');
         token_shop.anchor.setTo(0.5,0.5);
         token_shop.position.x = 235;
-        token_shop.position.y = 400;
+        token_shop.position.y = 500;
         game.stage.smoothed = false;
         token_shop.scale.setTo(1.5);
 
         token_shop.inputEnabled = true;
         token_shop.events.onInputDown.add(abrir_tienda, this);
 
-        token_shop_label = game.add.text(240, 355, 'Token shop', { font: '25px Courier', fill: '#ffffff'})
+        token_shop_label = game.add.text(240, 455, 'Token shop', { font: '25px Courier', fill: '#ffffff'})
         token_shop_label.anchor.setTo(0.5, 0.5);
         token_shop_label.align = "center";
 
@@ -94,35 +98,35 @@ function create() {
         current_tokens = parseInt(localStorage.getItem("tokens"));  
     }
 
-    token_sym_1 = game.add.sprite(650,50, 'token');
-    token_disp_label_2 = game.add.text(690, 55, "x"+current_tokens, { font: '25px Courier', fill: '#ffffff'});
-
-    /*
-    music  = game.add.audio('bgm');
-    music.play();
-    music.mute = false;
-    music.volume = 1;
+    token_sym_1 = game.add.sprite(650,70, 'token');
+    token_disp_label_2 = game.add.text(690, 75, "x"+current_tokens, { font: '25px Courier', fill: '#ffffff'});
     
-
-    mute = game.add.sprite(725, 20, 'mute');
-    mute.scale.setTo(0.5);
-    var mas = game.add.sprite(750, 20, 'mas');
-    mas.scale.setTo(0.5);
-    var menos = game.add.sprite(700, 20, 'menos');
+    var menos = game.add.sprite(650, 20, 'menos');
     menos.scale.setTo(0.5);
-   
+    mute = game.add.sprite(685, 20, 'mute');
+    mute.scale.setTo(0.5);
+    var mas = game.add.sprite(720, 20, 'mas');
+    mas.scale.setTo(0.5);
+    
+    if(BasicGame.music == null){
+        BasicGame.music  = game.add.audio('bgm1', 1, true);
+        BasicGame.music.play();
+        BasicGame.music.mute = false;
+        BasicGame.music.volume = 1;
+    }    
+
     mas.inputEnabled = true;
     mas.events.onInputDown.add(subir_volumen, this);
     menos.inputEnabled = true;
     menos.events.onInputDown.add(bajar_volumen, this);
     mute.inputEnabled = true;
-    mute.events.onInputDown.add(mutear, this);
-    */    
+    mute.events.onInputDown.add(toggle_music, this);
+    
 
     var xkey = game.input.keyboard.addKey(Phaser.Keyboard.S);
-    //var tkey = game.input.keyboard.addKey(Phaser.Keyboard.T);
+    var tkey = game.input.keyboard.addKey(Phaser.Keyboard.T);
     xkey.onDown.add(this.start, this);
-    //tkey.onDown.add(toggle_music,this);
+    tkey.onDown.add(toggle_music,this);
      
 }
 
@@ -140,17 +144,20 @@ function bajar_wave(){
 }
 
 function subir_volumen(){
-    console.log('mas ' + music.volume);
-    music.volume+=0.1;
-}
-function bajar_volumen(){
-    //console.log('menos fuera if ');
-    if(music.volume > 0.1){
-        console.log('menos en if ' + music.volume);
-        music.volume-= 0.1;
+    console.log('mas ' + BasicGame.music.volume);
+    if(BasicGame.music.volume < 1){
+        BasicGame.music.volume += 0.1;
     }    
 }
 
+function bajar_volumen(){
+    //console.log('menos fuera if ');
+    if(BasicGame.music.volume > 0.1){
+        console.log('menos en if ' + BasicGame.music.volume);
+        BasicGame.music.volume -= 0.1;
+    }    
+}
+/*
 function mutear(){
     if(music.mute == true){
         console.log('unmute');
@@ -166,14 +173,15 @@ function mutear(){
     }
     
 }
+*/
 
 function toggle_music(){
-    if(music.mute == true){
-        music.mute = false;
+    if(BasicGame.music.mute == true){
+        BasicGame.music.mute = false;
         mute.frame = 0;
     }
     else{
-        music.mute = true;
+        BasicGame.music.mute = true;
         mute.frame = 1;
     }
 }
@@ -267,6 +275,25 @@ function definir_precios(){
 
 }
 
+function mostrar_instrucciones(){
+    keys_guide = game.add.sprite(400,400, 'keys');
+    keys_guide.anchor.setTo(0.5,0.5);
+
+    keys_anim = keys_guide.animations.add('display');
+    keys_guide.animations.play('display', 2, true);
+
+    boton_cerrar_inst = game.add.sprite(630, 250, 'mas');
+    boton_cerrar_inst.angle = 45;
+    boton_cerrar_inst.inputEnabled = true;
+    boton_cerrar_inst.events.onInputDown.add(cerrar_inst, this);
+
+}
+
+function cerrar_inst(){
+    keys_guide.destroy();
+    boton_cerrar_inst.destroy();
+}
+
 function abrir_tienda(){
     if(comprando_tokens == 0){
         if(localStorage.getItem("tokens") == null){
@@ -282,10 +309,10 @@ function abrir_tienda(){
         fondo = game.add.sprite(0,0,'fondo_pausa');
         fondo.alpha = 0.99;
 
-        token_sym = game.add.sprite(350,100, 'token');
+        token_sym = game.add.sprite(350,120, 'token');
        
         
-        token_disp_label = game.add.text(390, 105, "x"+current_tokens, { font: '25px Courier', fill: '#ffffff'});
+        token_disp_label = game.add.text(390, 125, "x"+current_tokens, { font: '25px Courier', fill: '#ffffff'});
 
         escudo = game.add.sprite(120,220,'circulo');
         escudo.scale.setTo(2, 2);
@@ -602,7 +629,12 @@ function start(){
         cerrar_tienda();
     }
     else{
-        game.state.start('game');
+        game.add.tween(cubo_titulo).to({y: 400, x: 400}, 500, 'Linear', true, 0);
+        game.add.tween(titulo).to({alpha:0}, 1800, 'Linear', true, 0);
+
+        setTimeout(function(){
+            game.state.start('game');
+        },750);        
     }   
 }
 
