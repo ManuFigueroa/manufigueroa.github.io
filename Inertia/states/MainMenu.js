@@ -10,14 +10,22 @@ var start_wave = 1;
 var wave_label;
 var comprando_tokens = 0;
 var current_tokens = 0;
+var partir = 0;
+
+var loot_sfx;
+var buy_sfx;
+var hit_sfx;
+var shield_sfx;
 
 
 function create() {
-    console.log('Menu ver 3.42');    
+    console.log('Menu ver 3.4 clear');    
 
     /*===========================*/
     /*TESTING*/
     //localStorage.clear();
+
+    //localStorage.setItem("tokens", "5000");
 
     /*FIN TESTING*/
     /*===========================*/
@@ -114,6 +122,12 @@ function create() {
         BasicGame.music.mute = false;
         BasicGame.music.volume = 1;
     }    
+
+    loot_sfx = game.add.audio('loot');
+    buy_sfx = game.add.audio('pay');
+    hit_sfx = game.add.audio('hit');
+    shield_sfx = game.add.audio('shield_sfx');
+    shield_sfx.loop =true;
 
     mas.inputEnabled = true;
     mas.events.onInputDown.add(subir_volumen, this);
@@ -403,6 +417,7 @@ function abrir_tienda(){
 
 function mejorar_scale(){
     if(current_tokens >= shield_price_t && shield_scale_level <= 7){
+        buy_sfx.play();
         shield_scale_level ++;
         current_tokens-= shield_price_t;
 
@@ -434,6 +449,7 @@ function mejorar_scale(){
 
 function mejorar_duration(){
     if(current_tokens >= shield_price_dur_t && shield_duration_level <= 7){
+        buy_sfx.play();
         shield_duration_level ++;
         current_tokens-= shield_price_dur_t;
 
@@ -466,6 +482,7 @@ function mejorar_duration(){
 
 function mejorar_CD(){
     if(current_tokens >= shield_price_CD_t && shield_cooldown_level <= 7){
+        buy_sfx.play();
         shield_cooldown_level ++;
         current_tokens-= shield_price_CD_t;
 
@@ -499,6 +516,7 @@ function mejorar_CD(){
 
 function mejorar_cantidad(){
     if(current_tokens >= spike_count_price_t && spike_count_level <= 7){
+        buy_sfx.play();
         spike_count_level ++;
         current_tokens-= spike_count_price_t;
 
@@ -532,6 +550,7 @@ function mejorar_cantidad(){
 
 function mejorar_pierce(){
     if(current_tokens >= spike_pierce_price_t && spike_pierce_level <= 7){
+        buy_sfx.play();
         spike_pierce_level ++;
         current_tokens-= spike_pierce_price_t;
 
@@ -564,6 +583,7 @@ function mejorar_pierce(){
 
 function mejorar_hp(){
     if(current_tokens >= max_hp_price_t && max_hp_level <= 7){
+        buy_sfx.play();
         max_hp_level ++;
         current_tokens-= max_hp_price_t;
 
@@ -629,12 +649,18 @@ function start(){
         cerrar_tienda();
     }
     else{
-        game.add.tween(cubo_titulo).to({y: 400, x: 400}, 500, 'Linear', true, 0);
-        game.add.tween(titulo).to({alpha:0}, 1800, 'Linear', true, 0);
+        if(partir == 0){
+            partir = 1;
+            game.add.tween(cubo_titulo).to({y: 400, x: 400}, 500, 'Linear', true, 0);
+            game.add.tween(titulo).to({alpha:0}, 1800, 'Linear', true, 0);
 
-        setTimeout(function(){
-            game.state.start('game');
-        },750);        
+            setTimeout(function(){
+                partir = 0;
+                game.state.start('game');
+            },750);
+
+        }
+                
     }   
 }
 

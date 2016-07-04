@@ -62,7 +62,7 @@ var score = 0;
 var final_score = 0;
 
 function create() {
-    console.log('ver 3.2');
+    console.log('ver 4.1');
     score = 0;
     final_score = 0;
     speed = 400;
@@ -335,7 +335,7 @@ function set_levels_base(){
 function pierdo_hp(body1,body2){
     if(!body2.hasCollided)
     {        
-
+        hit_sfx.play();
         //console.log('en funcion pierdo hp');
         body2.hasCollided = true;
 
@@ -500,6 +500,7 @@ function update_hp(current_hp){
 
 function collect_token(body1, body2){
     var aumentar_tok = Math.floor((ronda/10)+ 1);
+    loot_sfx.play();
 	if(!body2.hasCollided)
     {   
     	hay_token = 0;
@@ -1002,6 +1003,7 @@ function accelerateToObject(obj1, obj2, speed) {
 
 function create_shield(){
     if(shield_in_use == 0){
+        shield_sfx.play();
         //console.log('scale: '+shield_scale+' CD: '+shield_cooldown+' Duration: '+shield_duration);
         shield_in_use = 1;
         shield = shields.create(cubo.position.x, cubo.position.y, 'circulo');
@@ -1015,7 +1017,8 @@ function create_shield(){
  
 
         setTimeout(function(){  
-            if(perdi == 0){          
+            if(perdi == 0){
+                shield_sfx.stop();          
                 shield.destroy();  
                 Cooldown_bar = game.add.sprite(cubo.position.x, cubo.position.y - 25, 'CD_bar');
                 Cooldown_bar.anchor.setTo(0.5);
@@ -1147,6 +1150,7 @@ function shop(event){
         if(event.x>120 && event.x<200 && event.y>220 && event.y<300 ){
             //significa que el click está en donde puse el boton de mejorar scale de escudo
             if(score >= shield_price){
+                buy_sfx.play();
                 shield_scale = shield_scale*1.13;
                 score-= shield_price;
 
@@ -1168,6 +1172,7 @@ function shop(event){
         }
         else if(event.x>120 && event.x<200 && event.y>350 && event.y<430){
             if(score >= shield_price_dur){
+                buy_sfx.play();
                 shield_duration = shield_duration*1.2;
                 score-= shield_price_dur;
 
@@ -1189,6 +1194,7 @@ function shop(event){
         }
         else if(event.x>120 && event.x<200 && event.y>480 && event.y<560){
             if(score >= shield_price_CD && shield_cooldown > 600){
+                buy_sfx.play();
                 shield_cooldown -= 300;
                 score-= shield_price_CD;
                 shield_price_CD = 2*shield_price_CD;
@@ -1211,6 +1217,7 @@ function shop(event){
         else if(event.x>350 && event.x<430 && event.y>220 && event.y<300 ){
             //significa que el click está en donde puse el boton de mejorar scale de escudo
             if(score >= spike_count_price){
+                buy_sfx.play();
                 create_spike();                
                 score-= spike_count_price;
 
@@ -1232,6 +1239,7 @@ function shop(event){
         }
         else if(event.x>350 && event.x<430 && event.y>350 && event.y<430){
             if(score >= spike_pierce_price){
+                buy_sfx.play();
                 spikes_hp++;
                 score-= spike_pierce_price;
 
@@ -1253,6 +1261,7 @@ function shop(event){
         }
         else if(event.x>350 && event.x<430 && event.y>480 && event.y<560){
             if(score >= max_hp_price && max_hp < 8){
+                buy_sfx.play();
                 max_hp++;
                 hp = max_hp;
                 score-= max_hp_price;

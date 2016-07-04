@@ -32,6 +32,12 @@ function preload() {
     game.load.image('mas', 'assets/plus.png');
     game.load.audio('bgm1', 'assets/sounds/inercia_bgm.mp3');
 
+    game.load.audio('loot', 'assets/sounds/coin.wav');
+    game.load.audio('pay', 'assets/sounds/money.wav');
+    game.load.audio('hit', 'assets/sounds/hit1.mp3');
+    game.load.audio('shield_sfx', 'assets/sounds/shield3.mp3');
+
+
     game.load.physics('physicsData', 'assets/polygons.json');    
 }
 
